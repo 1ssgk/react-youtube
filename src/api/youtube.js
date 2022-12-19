@@ -3,10 +3,12 @@ export default class Youtube {
     this.apiClient = apiClient;
   }
 
+  /* youtube videos 검색 */
   async search(keyword) {
     return keyword ? this.#searchByKeyword(keyword) : this.#mostPopular();
   }
 
+  /* channel 의 ImageURL 가져오기 */
   async channelImageURL(id) {
     return this.apiClient
       .channels({
@@ -18,6 +20,7 @@ export default class Youtube {
       .then((res) => res.data.items[0].snippet.thumbnails.default.url);
   }
 
+  /* 해당 video와 연관된 videos 가져오기 */
   async relatedVideos(id){
     return this.apiClient.search({
       params: {
@@ -29,6 +32,7 @@ export default class Youtube {
     }).then((res)=> res.data.items.map((item) => ({ ...item, id: item.id.videoId })));
   }
 
+  /* keyword 를 이용한 videos 검색*/
   async #searchByKeyword(keyword) {
     return this.apiClient
       .search({
@@ -43,6 +47,7 @@ export default class Youtube {
       .then((items) => items.map((item) => ({ ...item, id: item.id.videoId })));
   }
 
+  /* 현재 인기있는 videos 검색 */
   async #mostPopular() {
     return this.apiClient
       .videos({
